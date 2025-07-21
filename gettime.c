@@ -1,4 +1,4 @@
-#include "gettime.h"
+#include <gettime.h>
 
 void gettime(int *sec, int *usec)
 {

@@ -1,5 +1,7 @@
-#include "file.h"
-#include "str.h"
+#include <file.h>
+#include <str.h>
+#include <string.h>
+#include <malloc.h>
 
 EFI_FILE_PROTOCOL *root;
 
@@ -127,7 +129,6 @@ long ftell(FILE *stream)
 int feof(FILE *stream)
 {
   INTN position = ftell(stream);
-  printf(L"File size: %i\n", get_file_size(stream));
   if(position >= get_file_size(stream))
     return 1;
   return 0;

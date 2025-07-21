@@ -1,4 +1,4 @@
-#include "video.h"
+#include <video.h>
 
 struct pixel *frame_buffer_base;
 UINT32 frame_buffer_size;

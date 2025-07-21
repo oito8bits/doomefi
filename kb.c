@@ -1,4 +1,4 @@
-#include "kb.h"
+#include <kb.h>
 
 CHAR16 kb_wait_for_key(VOID)
 {

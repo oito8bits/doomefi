@@ -1,4 +1,4 @@
-#include "str.h"
+#include <str.h>
 
 INTN str_len(const char *str)
 {
