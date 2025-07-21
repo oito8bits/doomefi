@@ -1,13 +1,18 @@
 #include <efi.h>
-#include <libefi.h>
-#include "dprintf.h"
-#include "file.h"
-#include "env.h"
-#include "video.h"
-#include "gettime.h"
-#include "kb.h"
+#include <malloc.h>
+#include <dprintf.h>
+#include <file.h>
+#include <env.h>
+#include <video.h>
+#include <gettime.h>
+#include <kb.h>
 #define DOOM_IMPLEMENTATION
 #include "PureDOOM/PureDOOM.h"
+
+EFI_SYSTEM_TABLE *ST;
+EFI_HANDLE IH;
+EFI_BOOT_SERVICES *BS;
+EFI_RUNTIME_SERVICES *RS;
 
 static VOID exit(UINTN status)
 {
@@ -17,8 +22,12 @@ static VOID exit(UINTN status)
 EFI_STATUS efi_main(EFI_HANDLE image_handle, EFI_SYSTEM_TABLE *system_table)
 {
   EFI_STATUS status;
-  init_lib(image_handle, system_table);
- 
+
+  ST = system_table;
+  IH = image_handle;
+  BS = ST->BootServices;
+  RS = ST->RuntimeServices;
+
   video_init();
   kb_init();
 

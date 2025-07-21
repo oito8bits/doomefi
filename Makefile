@@ -1,7 +1,7 @@
 IMG = doomefi.img
 PROG = BOOTX64.EFI
 CC = x86_64-w64-mingw32-gcc
-OBJS = efi_main.o dprintf.o file.o str.o env.o video.o gettime.o kb.o
+OBJS = efi_main.o dprintf.o file.o str.o env.o video.o gettime.o kb.o malloc.o string.o
 
 $(IMG): $(PROG)
 	dd if=/dev/zero of=$@ bs=1024 count=46875
@@ -17,14 +17,11 @@ $(IMG): $(PROG)
 	sudo umount $@
 	rmdir dir
 
-$(PROG): $(OBJS) libefi/libefi.a
-	$(CC) -nostdlib -Wl,-dll -shared -Wl,--subsystem,10 -e efi_main -o $(PROG) $^  -Llibefi/ -l:libefi.a
+$(PROG): $(OBJS)
+	$(CC) -nostdlib -Wl,-dll -shared -Wl,--subsystem,10 -e efi_main -o $(PROG) $^ -Iinclude/
 
 %.o: %.c
 	$(CC) -O2 -ffreestanding -I libefi/include/ -I include/ -I include/amd64 -c -o $@ $<
-
-libefi/libefi.a:
-	make -C libefi/
 
 .PHONY: clean run
 

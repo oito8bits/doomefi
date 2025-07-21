@@ -3,7 +3,6 @@
 
 #include <stddef.h>
 #include <efi.h>
-#include <libefi.h>
 
 #define SEEK_SET 0
 #define SEEK_CUR 1

@@ -1,7 +1,7 @@
 #ifndef _VIDEO_INCLUDE_
 #define _VIDEO_INCLUDE_
 
-#include <libefi.h>
+#include <efi.h>
 
 struct pixel
 {
