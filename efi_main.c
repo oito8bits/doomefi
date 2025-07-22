@@ -16,7 +16,7 @@ EFI_RUNTIME_SERVICES *RS;
 
 static VOID exit(UINTN status)
 {
-  BS->Exit(IH, 1, 0, NULL);
+BS->Exit(IH, 1, 0, NULL);
 }
 
 EFI_STATUS efi_main(EFI_HANDLE image_handle, EFI_SYSTEM_TABLE *system_table)
@@ -30,7 +30,8 @@ EFI_STATUS efi_main(EFI_HANDLE image_handle, EFI_SYSTEM_TABLE *system_table)
 
   video_init();
   kb_init();
-
+  env_init();
+  
   doom_set_print((void *) dprintf);
   doom_set_malloc((void *) malloc, (void *) free);
 
@@ -87,6 +88,8 @@ EFI_STATUS efi_main(EFI_HANDLE image_handle, EFI_SYSTEM_TABLE *system_table)
       last_doom_key = doom_key;
     }
   }
+
+  env_end();
 
   return EFI_SUCCESS;
 }
