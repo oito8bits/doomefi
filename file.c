@@ -112,7 +112,7 @@ int fseek(FILE *stream, long offset, int whence)
       position += offset;
       break;
     case SEEK_END:
-      position = 4196020 + offset;
+      position = get_file_size(stream) + offset;
       break;
   }
   
