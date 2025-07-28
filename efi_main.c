@@ -1,6 +1,6 @@
 #include <efi.h>
-#include <malloc.h>
-#include <dprintf.h>
+#include <mem.h>
+#include <console.h>
 #include <file.h>
 #include <env.h>
 #include <video.h>
@@ -16,7 +16,7 @@ EFI_RUNTIME_SERVICES *RS;
 
 static VOID exit(UINTN status)
 {
-BS->Exit(IH, 1, 0, NULL);
+  BS->Exit(IH, 1, 0, NULL);
 }
 
 EFI_STATUS efi_main(EFI_HANDLE image_handle, EFI_SYSTEM_TABLE *system_table)
@@ -32,20 +32,20 @@ EFI_STATUS efi_main(EFI_HANDLE image_handle, EFI_SYSTEM_TABLE *system_table)
   kb_init();
   env_init();
   
-  doom_set_print((void *) dprintf);
-  doom_set_malloc((void *) malloc, (void *) free);
+  doom_set_print((void *) console_ascii_printf);
+  doom_set_malloc((void *) mem_malloc, (void *) mem_free);
 
   file_init_file_protocol();
-  doom_set_file_io((void *) fopen,
-                   (void *) fclose,
-                   (void *) fread,
-                   (void *) fwrite,
-                   (void *) fseek,
-                   (void *) ftell,
-                   (void *) feof);
+  doom_set_file_io((void *) file_open,
+                   (void *) file_close,
+                   (void *) file_read,
+                   (void *) file_write,
+                   (void *) file_seek,
+                   (void *) file_tell,
+                   (void *) file_eof);
   doom_set_exit((void *) exit);
   doom_set_gettime((void *) gettime);
-  doom_set_getenv((void *) getenv);
+  doom_set_getenv((void *) env_get);
   
   int argc = 1;
   char *argv[] = {"bootx64.efi"};

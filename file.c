@@ -1,14 +1,14 @@
 #include <file.h>
 #include <str.h>
-#include <string.h>
-#include <malloc.h>
+#include <ascii.h>
+#include <mem.h>
 
 EFI_FILE_PROTOCOL *root;
 
 static VOID convert_path(CHAR16 *path)
 {
   UINTN i;
-  for(i = 0; i < strlen(path); i++)
+  for(i = 0; i < str_strlen(path); i++)
   {
     if(path[i] == '/')
       path[i] = '\\';
@@ -51,12 +51,12 @@ EFI_STATUS file_init_file_protocol(void)
   return EFI_SUCCESS;
 }
 
-FILE *fopen(const char *pathname, const char *mode)
+FILE *file_open(const char *pathname, const char *mode)
 {
   EFI_STATUS status;
 
-  CHAR16 *pathname16 = malloc((str_len(pathname) + 1) * sizeof(CHAR16));
-  str_ascii_to_utf16(pathname16, pathname);
+  CHAR16 *pathname16 = mem_malloc((ascii_strlen(pathname) + 1) * sizeof(CHAR16));
+  ascii_to_utf16(pathname16, pathname);
   convert_path(pathname16);
   EFI_FILE_PROTOCOL *stream;
   status = root->Open(root,
@@ -67,17 +67,17 @@ FILE *fopen(const char *pathname, const char *mode)
   if(EFI_ERROR(status))
     stream = 0;
   
-  free(pathname16);
+  mem_free(pathname16);
 
   return stream;
 }
 
-int fclose(FILE *stream)
+int file_close(FILE *stream)
 {
   stream->Close(stream);
 }
 
-INTN fread(FILE *stream, void *ptr, int size)
+int file_read(FILE *stream, void *ptr, int size)
 {
   EFI_STATUS status;
   UINTN file_size = size;
@@ -88,7 +88,7 @@ INTN fread(FILE *stream, void *ptr, int size)
   return size;
 }
 
-INTN fwrite(FILE *stream, const void *ptr, int size)
+int file_write(FILE *stream, const void *ptr, int size)
 {
   EFI_STATUS status;
   UINTN file_size = size;
@@ -99,10 +99,10 @@ INTN fwrite(FILE *stream, const void *ptr, int size)
   return size;
 }
 
-int fseek(FILE *stream, long offset, int whence)
+int file_seek(FILE *stream, long offset, int whence)
 {
   EFI_STATUS status;
-  INTN position = ftell(stream); 
+  INTN position = file_tell(stream); 
   switch(whence)
   {
     case SEEK_SET:
@@ -119,16 +119,16 @@ int fseek(FILE *stream, long offset, int whence)
   stream->SetPosition(stream, position);
 }
 
-long ftell(FILE *stream)
+long file_tell(FILE *stream)
 {
   INTN position;
   stream->GetPosition(stream, &position);
   return position;
 }
 
-int feof(FILE *stream)
+int file_eof(FILE *stream)
 {
-  INTN position = ftell(stream);
+  INTN position = file_tell(stream);
   if(position >= get_file_size(stream))
     return 1;
   return 0;

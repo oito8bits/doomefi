@@ -1,9 +1,8 @@
-#include <dprintf.h>
+#include <console.h>
 #include <str.h>
-#include <string.h>
 #include <stdarg.h>
 
-int dprintf(const char *format, ...)
+int console_ascii_printf(const char *format, ...)
 {
 /*
   CHAR16 *format16 = malloc(str_len(format) * sizeof(CHAR16));
@@ -25,31 +24,31 @@ static VOID put(const CHAR16 *string)
 static VOID puti(INTN number)
 {
   CHAR16 string[21] = {0};
-  itos(string, number);
+  str_itos(string, number);
   put(string);
 }
 
 static VOID print_hex(UINT64 number)
 {
   CHAR16 str[17] = {0};
-  uitoh(str, number);
+  str_uitoh(str, number);
   put(str);
 }
 
-VOID puts(const CHAR16 *string)
+VOID console_puts(const CHAR16 *string)
 {
   put(string);
   put(L"\n\r");
 }
 
-VOID putchar(CHAR16 character)
+VOID console_putchar(CHAR16 character)
 {
   CHAR16 string[2] = {character, L'\0'};
 
   ST->ConOut->OutputString(ST->ConOut, string);
 }
 
-INTN printf(const CHAR16 *format, ...)
+INTN console_printf(const CHAR16 *format, ...)
 {
   va_list vl;
 
@@ -62,13 +61,13 @@ INTN printf(const CHAR16 *format, ...)
       switch(*format)
       {
         case L'%':
-          putchar(L'%');
+          console_putchar(L'%');
           break;
         case L'i':
           puti(va_arg(vl, INTN));
           break;
         case L'c':
-          putchar((CHAR16) va_arg(vl, UINTN));
+          console_putchar((CHAR16) va_arg(vl, UINTN));
           break;
         case L's':
           put(va_arg(vl, CHAR16 *));
@@ -80,7 +79,7 @@ INTN printf(const CHAR16 *format, ...)
       }
     }
     else
-      putchar(*format);
+      console_putchar(*format);
 
     format++;
   }

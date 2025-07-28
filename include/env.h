@@ -3,8 +3,8 @@
 
 #include <efi.h>
 
-char *getenv(const char *);
-int setenv(const char *, const char *);
+char *env_get(const char *);
+int env_set(const char *, const char *);
 void env_init(void);
 void env_end(void);
 

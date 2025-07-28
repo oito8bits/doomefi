@@ -12,12 +12,12 @@ typedef EFI_FILE_PROTOCOL FILE;
 
 UINTN get_file_size(FILE *);
 EFI_STATUS file_init_file_protocol(void);
-FILE *fopen(const char *, const char *);
-int fclose(FILE *);
-INTN fread(FILE *, void *, int);
-INTN fwrite(FILE *, const void *, int);
-int fseek(FILE *, long, int);
-long ftell(FILE *);
-int feof(FILE *);
+FILE *file_open(const char *, const char *);
+int file_close(FILE *);
+int file_read(FILE *, void *, int);
+int file_write(FILE *, const void *, int);
+int file_seek(FILE *, long, int);
+long file_tell(FILE *);
+int file_eof(FILE *);
 
 #endif

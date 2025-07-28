@@ -1,7 +1,7 @@
 IMG = doomefi.img
 PROG = BOOTX64.EFI
 CC = x86_64-w64-mingw32-gcc
-OBJS = efi_main.o dprintf.o file.o str.o env.o video.o gettime.o kb.o malloc.o string.o
+OBJS = efi_main.o console.o file.o str.o env.o video.o gettime.o kb.o mem.o ascii.o str.o
 
 $(IMG): $(PROG)
 	dd if=/dev/zero of=$@ bs=1024 count=46875

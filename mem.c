@@ -1,7 +1,7 @@
-#include <malloc.h>
+#include <mem.h>
 #include <string.h>
 
-VOID *malloc(UINTN size)
+VOID *mem_malloc(UINTN size)
 {
   VOID *buffer;
   EFI_STATUS status;
@@ -14,7 +14,7 @@ VOID *malloc(UINTN size)
   return buffer;
 }
 
-VOID free(VOID *buffer)
+VOID mem_free(VOID *buffer)
 {
   BS->FreePool(buffer);
 }
